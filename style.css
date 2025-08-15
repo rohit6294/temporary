@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base & Form Styles
+   Base & Form Styles (No changes needed here)
    ========================================================================== */
 * {
   box-sizing: border-box;
@@ -24,7 +24,7 @@ body {
 .form-container {
     width: 100%;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto 2rem auto; /* Add margin to separate from invoice */
     background: #fff;
     padding: 2rem;
     border-radius: 10px;
@@ -39,27 +39,16 @@ body {
     color: #333;
 }
 
-#sample_form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
+#sample_form { display: flex; flex-direction: column; gap: 1.25rem; }
 .form-row { display: flex; gap: 1.5rem; }
 .form-group { flex: 1; display: flex; flex-direction: column; }
 .form-group label { margin-bottom: 0.5rem; font-weight: 500; color: #555; }
 #sample_form input, #sample_form textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px;
+    font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s;
 }
 #sample_form input:focus, #sample_form textarea:focus {
-    outline: none;
-    border-color: #086f77;
-    box-shadow: 0 0 0 3px rgba(8, 111, 119, 0.2);
+    outline: none; border-color: #086f77; box-shadow: 0 0 0 3px rgba(8, 111, 119, 0.2);
 }
 #sample_form textarea { min-height: 80px; resize: vertical; }
 .form-divider { border: none; border-top: 1px solid #eee; margin: 0.5rem 0; }
@@ -77,25 +66,34 @@ body {
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   Invoice & PDF Correction Styles
+   DEFINITIVE PDF & INVOICE STYLES (THE FIX IS HERE)
    ========================================================================== */
 
-/* This is the main container for the invoice preview on screen */
+/* This is the outer container for the on-screen preview.
+   It has the shadow and is sized to an A4 width for an accurate preview. */
 #form_main {
-    width: 210mm; /* A4 width */
-    background: #fff;
+    width: 210mm; /* A4 Paper Width */
     box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    background: #fff; /* Ensures shadow has a background */
 }
 
-/* This is the element that the PDF generator will target.
-   It has NO box-shadow or extra spacing that could break the PDF layout. */
+/* This is the actual element that gets converted to PDF.
+   It has NO shadow, NO border, and a PRECISE width and padding.
+   This is the critical fix. */
 main#main_formm {
-    width: 100%;
+    width: 210mm; /* A4 Paper Width */
+    min-height: 297mm; /* A4 Paper Height */
+    padding: 15mm; /* Standard print margins */
     background-color: #fff;
-    padding: 15mm 10mm; /* Standard A4 margins */
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* All direct children of the invoice must have 100% width
+   to respect the parent's padding and not overflow. */
+#main_formm > * {
+    width: 100%;
 }
 
 nav.toolbar {
@@ -105,31 +103,20 @@ nav.toolbar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    padding: 0 10px;
 }
 
 .btngroup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #eee;
-  text-shadow: 1px 1px 0px #0006;
-  font-size: 9px;
-  border-radius: 6px;
-  padding: 0 5px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; color: #eee; text-shadow: 1px 1px 0px #0006;
+  font-size: 9px; border-radius: 6px; padding: 4px 8px;
 }
 .btngroup:hover { background-color: #666; }
 
 button.btn {
-  height: 2rem;
-  width: 2rem;
-  background-color: transparent;
-  border: none;
-  margin-bottom: 2px;
-  transition: all 50ms linear;
-  background-size: 1rem 1rem;
-  background-repeat: no-repeat;
-  background-position: center center;
+  height: 24px; width: 24px; background-color: transparent; border: none;
+  margin-bottom: 2px; transition: all 50ms linear;
+  background-size: 18px 18px; background-repeat: no-repeat; background-position: center;
 }
 button:active { transform: scale(0.95); }
 
@@ -141,99 +128,56 @@ button#editBtn {
 }
 
 /* Invoice Content Styles */
-.prehead, header, table.lineitems, .footer-container, .words-section {
-    width: 100%; /* Use 100% to fit within the padded main container */
-}
-
+.prehead { display: flex; justify-content: space-between; padding: 0.5rem 0; }
 header {
-  display: flex;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 1rem 0;
-}
-.prehead {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
+  display: flex; border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee; padding: 1rem 0;
 }
 .address { width: 50%; padding: 0 1rem; }
 .address:first-child { border-right: 1px solid #eee; }
 
 table.lineitems, table.invoice-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  width: 100%; border-collapse: collapse; margin-top: 20px;
 }
 table.lineitems thead th {
-  border-bottom: 1px solid #0003;
-  border-top: 1px solid #0003;
-  background: #333;
-  color: #eee;
-  font-weight: 300;
-  padding: 8px;
+  border-bottom: 1px solid #333; border-top: 1px solid #333;
+  background: #f8f8f8; color: #111; font-weight: 400; padding: 8px;
 }
-table.lineitems td {
-  border-bottom: 1px solid #eee;
-  vertical-align: top;
-  padding: 8px;
-}
+table.lineitems td { border-bottom: 1px solid #eee; vertical-align: top; padding: 8px; }
 .sl { text-align: center; }
 table.tally {
-  border-collapse: collapse;
-  width: 200px; /* fixed width for tally table */
-  float: right;
+  border-collapse: collapse; width: 220px; float: right;
 }
 table.tally td { padding: 4px 8px; }
 .label { text-align: right; font-weight: bold; }
 
-.words-section {
-    width: 100%;
-    margin-top: 10px;
-}
-
+.words-section { width: 100%; margin-top: 15px; }
 .invoice-table th, .invoice-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+    border: 1px solid #ddd; padding: 8px; text-align: center;
 }
 
-/* Corrected Footer */
+/* Final Footer Fix */
 .footer-container {
-    margin-top: 25px;
+    margin-top: auto; /* Pushes footer to the bottom of the flex container */
+    padding-top: 20px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    page-break-inside: avoid; /* Prevents footer from splitting across pages */
+    page-break-inside: avoid;
 }
-.footer-column {
-    width: 48%;
-    display: flex;
-    flex-direction: column;
-}
+.footer-column { width: 48%; display: flex; flex-direction: column; }
 .signature-box {
-    border: 1px solid black;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    border: 1px solid black; padding: 8px;
+    display: flex; flex-direction: column; justify-content: space-between;
 }
-.footer-column.left .signature-box {
-    height: 80px;
-    margin-bottom: 5px;
-}
-.footer-column.right .signature-box {
-    flex-grow: 1;
-    text-align: right;
-}
+.footer-column.left .signature-box { height: 80px; margin-bottom: 5px; }
+.footer-column.right .signature-box { flex-grow: 1; text-align: right; }
 .signature-box span b { font-size: 16px; }
 .signature-box .signatory { font-size: small; }
 .declaration { flex-grow: 1; }
 .declaration span b { font-size: 14px; }
-.declaration span {
-    font-size: 10px;
-    display: block;
-    line-height: 1.2;
-}
+.declaration span { font-size: 10px; display: block; line-height: 1.2; }
 
 @media (max-width: 600px) {
     .form-row { flex-direction: column; gap: 1.25rem; }
