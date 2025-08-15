@@ -57,17 +57,30 @@ function ConvertNumberToWords(num) {
  * @param {string} invoiceNumber The invoice number for the filename.
  */
 function printInvoice(invoiceNumber) {
+    // Add a 'print' class to the body for any print-specific styling
     document.body.classList.add("print");
-    const sample_form = document.getElementById('sample_form');
-    sample_form.classList.add("hidden");
-    let el = document.getElementById("main_formm");
-    el.classList.remove("hidden");
-    html2pdf(el, {
-        filename: 'MS#' + invoiceNumber + '.pdf',
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        html2canvas: { scale: 2 } // Higher scale for better resolution
+    let invoiceElement = document.getElementById("main_formm");
+
+    const options = {
+        margin: 0.5,
+        filename: `MS#${invoiceNumber}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    // html2pdf returns a promise, allowing us to perform actions after it completes
+    html2pdf().from(invoiceElement).set(options).save().then(() => {
+        // This code runs AFTER the PDF has been saved.
+        // We remove the 'print' class to restore the normal view.
+        document.body.classList.remove("print");
+    }).catch(err => {
+        // If there's an error, log it and still remove the print class.
+        console.error("PDF generation failed:", err);
+        document.body.classList.remove("print");
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxAd4ZF3BfZcRomueGzf7QciFu2B6QKi_Rsn8Dld0zdLG7gOb4-vsAxLRzGFg1BuU-FcA/exec';
@@ -78,12 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const printBtn = document.getElementById('printBtn');
     const editBtn = document.getElementById('editBtn');
     const editBtnContainer = document.getElementById('editBtnContainer');
-    const testDataBtn = document.getElementById('testDataBtn'); // Get the new test button
+    const testDataBtn = document.getElementById('testDataBtn');
     
     // --- Get form and invoice sections ---
-    const sample_form = document.getElementById('sample_form');
-    const form_main = document.getElementById('form_main');
     const form_container = document.getElementById('form_container');
+    const form_main = document.getElementById('form_main');
 
     // --- Variable to store the current invoice data ---
     let invoiceData = {};
@@ -105,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('tgst').textContent = (2 * gst).toFixed(2);
         document.querySelectorAll('.basic_value').forEach(e => e.textContent = without_gst.toFixed(2));
         document.querySelectorAll(".gst").forEach(element => element.textContent = gst.toFixed(2));
-        document.getElementById('main_with_gst_value').textContent = mainval.toFixed(2); // Use the original total
+        document.getElementById('main_with_gst_value').textContent = mainval.toFixed(2);
         document.getElementById('rounded').textContent = rounded_value;
         
         document.getElementById('car_details').innerText = data.car_details.toUpperCase();
@@ -136,7 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
     submitBtn.addEventListener('click', function (e) {
         e.preventDefault();
 
-        // --- Store data from the form into our invoiceData object ---
         invoiceData = {
             date: document.getElementById('date_input').value,
             invoice: document.getElementById('invoice').value,
@@ -157,14 +168,10 @@ document.addEventListener("DOMContentLoaded", function () {
             chassis: document.getElementById('ch_input').value,
         };
 
-        // --- Populate the invoice preview ---
         populateInvoice(invoiceData);
 
-        // --- Show the invoice section and hide the form ---
         form_main.classList.remove("hidden");
         form_container.classList.add("hidden");
-
-        // --- Show the edit button ---
         editBtnContainer.classList.remove('hidden');
     });
 
@@ -176,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         printInvoice(invoiceData.invoice);
         
-        // Send data to Google Sheet
         fetch(scriptURL, {
             method: 'POST',
             body: new FormData(form)
@@ -192,14 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- Event listener for the Edit Button ---
     editBtn.addEventListener('click', function() {
-        // --- Hide the invoice preview and the edit button ---
         form_main.classList.add('hidden');
         editBtnContainer.classList.add('hidden');
-        
-        // --- Show the form again ---
         form_container.classList.remove('hidden');
 
-        // --- Repopulate the form with the stored data ---
         document.getElementById('date_input').value = invoiceData.date;
         document.getElementById('invoice').value = invoiceData.invoice;
         document.getElementById('gstinput').value = invoiceData.gstinput;
@@ -219,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('ch_input').value = invoiceData.chassis;
     });
 
-    // --- START: Event listener for the Test Data Button ---
+    // --- Event listener for the Test Data Button ---
     testDataBtn.addEventListener('click', () => {
         document.getElementById('date_input').value = '2025-08-15';
         document.getElementById('invoice').value = '252601';
@@ -227,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('biller_name_input').value = 'Surojit Das';
         document.getElementById('biller_number_input').value = '9876512345';
         document.getElementById('biller_aadhar_input').value = '123456789012';
-        document.getElementById('gst_name_input').value = ''; // Optional, so left blank
+        document.getElementById('gst_name_input').value = '';
         document.getElementById('city').value = 'Kakdwip';
         document.getElementById('P.S').value = 'Kakdwip';
         document.getElementById('P.O').value = 'Kakdwip';
@@ -245,5 +247,4 @@ Warranty: 1 Year on Motor`;
         document.getElementById('color_input').value = 'Blue';
         document.getElementById('ch_input').value = 'AB12CD34EF56GH78';
     });
-    // --- END: Event listener for the Test Data Button ---
 });
