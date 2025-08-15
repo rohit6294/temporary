@@ -43,10 +43,9 @@ main {
   align-items: center;
   justify-content: flex-start;
   width: 8.25in;
-  min-height: 11.7in; /* A4 paper height to help with scaling */
+  /* REMOVED min-height to prevent extra blank page in PDF */
   background-color: #fff;
   box-shadow: 4px 0px 4px #0004;
-  
   margin: 0 auto;
   padding-bottom: 2rem; /* Add some padding at the bottom */
 }
