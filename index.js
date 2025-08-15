@@ -1,8 +1,3 @@
-/**
- * Converts a number to its word representation.
- * @param {number} num The number to convert.
- * @returns {string} The word representation of the number.
- */
 function ConvertNumberToWords(num) {
     if (num === 0) return "zero";
 
@@ -24,11 +19,12 @@ function ConvertNumberToWords(num) {
         else return belowTwenty[Math.floor(n / 100) - 1] + " hundred " + (n % 100 !== 0 ? "and " : "") + helper(n % 100);
     }
 
-    let integerPart = Math.floor(num);
-    let decimalPart = num % 1;
+    let integerPart = Math.floor(num); // Integer part
+    let decimalPart = num % 1; // Decimal part
     let word = "";
     let i = 0;
 
+    // Handle integer part
     while (integerPart > 0) {
         let chunk = integerPart % (i === 0 ? 1000 : 100);
         if (chunk !== 0) {
@@ -40,11 +36,12 @@ function ConvertNumberToWords(num) {
 
     word = word.trim();
 
+    // Handle decimal part
     if (decimalPart > 0) {
         let decimalWords = "point ";
-        const decimals = decimalPart.toString().split(".")[1] || "";
+        const decimals = decimalPart.toString().split(".")[1]; // Get digits after the decimal point
         for (let digit of decimals) {
-            decimalWords += (belowTwenty[parseInt(digit) - 1] || 'zero') + " ";
+            decimalWords += belowTwenty[parseInt(digit) - 1] + " "; // Convert digits to words
         }
         word += " " + decimalWords.trim();
     }
@@ -52,199 +49,161 @@ function ConvertNumberToWords(num) {
     return word.trim();
 }
 
-/**
- * Generates and downloads a PDF of the invoice.
- * @param {string} invoiceNumber The invoice number for the filename.
- */
-function printInvoice(invoiceNumber) {
-    // Add a 'print' class to the body for any print-specific styling
+function printInvoice(e) {
+    // Note: The printInvoice function no longer needs to hide the form,
+    // as the submit handler already does that.
     document.body.classList.add("print");
-    let invoiceElement = document.getElementById("main_formm");
-
-    const options = {
-        margin: 0.5,
-        filename: `MS#${invoiceNumber}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-
-    // html2pdf returns a promise, allowing us to perform actions after it completes
-    html2pdf().from(invoiceElement).set(options).save().then(() => {
-        // This code runs AFTER the PDF has been saved.
-        // We remove the 'print' class to restore the normal view.
-        document.body.classList.remove("print");
-    }).catch(err => {
-        // If there's an error, log it and still remove the print class.
-        console.error("PDF generation failed:", err);
-        document.body.classList.remove("print");
+    let el = document.getElementById("main_formm");
+    el.classList.remove("hidden");
+    html2pdf(el, {
+        filename: 'MS#' + e + '.pdf',
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        html2canvas: { scale: 2 } // Higher scale for better resolution
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxAd4ZF3BfZcRomueGzf7QciFu2B6QKi_Rsn8Dld0zdLG7gOb4-vsAxLRzGFg1BuU-FcA/exec';
     const form = document.forms['google-sheet'];
+    const submit = document.getElementById('but');
 
-    // --- Get all interactive elements ---
-    const submitBtn = document.getElementById('but');
-    const printBtn = document.getElementById('printBtn');
+    // Get references to all elements we will manipulate
+    const form_main = document.getElementById('form_main');
+    const sample_form = document.getElementById('sample_form');
     const editBtn = document.getElementById('editBtn');
     const editBtnContainer = document.getElementById('editBtnContainer');
-    const testDataBtn = document.getElementById('testDataBtn');
-    
-    // --- Get form and invoice sections ---
-    const form_container = document.getElementById('form_container');
-    const form_main = document.getElementById('form_main');
 
-    // --- Variable to store the current invoice data ---
-    let invoiceData = {};
-
-    /**
-     * Populates the invoice preview with data.
-     * @param {object} data The data from the form.
-     */
-    function populateInvoice(data) {
-        const date_parts = data.date.split('-');
-        document.getElementById('date_output').textContent = `${date_parts[2]}/${date_parts[1]}/${date_parts[0]}`;
-
-        const mainval = parseFloat(data.gstinput);
-        const without_gst = parseFloat((mainval / 1.05).toFixed(2));
-        const gst = parseFloat(((mainval - without_gst) / 2).toFixed(2));
-        const full_value = (without_gst + 2 * gst).toFixed(2);
-        const rounded_value = (mainval - full_value).toFixed(2);
-        
-        document.getElementById('tgst').textContent = (2 * gst).toFixed(2);
-        document.querySelectorAll('.basic_value').forEach(e => e.textContent = without_gst.toFixed(2));
-        document.querySelectorAll(".gst").forEach(element => element.textContent = gst.toFixed(2));
-        document.getElementById('main_with_gst_value').textContent = mainval.toFixed(2);
-        document.getElementById('rounded').textContent = rounded_value;
-        
-        document.getElementById('car_details').innerText = data.car_details.toUpperCase();
-        document.getElementById("other_output").innerText = data.other_details.toUpperCase();
-        document.getElementById('color').textContent = `${data.color.toUpperCase()} COLOUR`;
-        document.getElementById('ch_output').textContent = data.chassis.toUpperCase();
-        document.getElementById('quantity_output').textContent = `${data.quantity} NOS`;
-        document.getElementById('biller_name').textContent = data.biller_name.toUpperCase();
-        document.getElementById('city_output').textContent = `${data.city.toUpperCase()}, ${data.ps.toUpperCase()}, ${data.po.toUpperCase()}`;
-        document.getElementById('dist_output').textContent = `${data.dist.toUpperCase()}, WEST BENGAL`;
-        document.getElementById('pincode_output').textContent = data.pincode;
-        document.getElementById('invoice_bill').textContent = data.invoice;
-        document.getElementById('gstname').textContent = data.gst_name.toUpperCase();
-        document.getElementById('aadhar_output').textContent = data.biller_aadhar;
-        document.getElementById('number_output').textContent = data.biller_number;
-
-        document.getElementById('amount_word').textContent = `${ConvertNumberToWords(mainval).toUpperCase()} ONLY.`;
-        
-        const basicwordEl = document.getElementById('basicword');
-        let beforePoint = Math.floor(without_gst);
-        let afterPoint = Math.round((without_gst - beforePoint) * 100);
-        const a = ConvertNumberToWords(beforePoint);
-        const b = ConvertNumberToWords(afterPoint);
-        basicwordEl.textContent = `${a.toUpperCase()} AND ${b.toUpperCase()} PAISA ONLY`;
-    }
-
-    // --- Event listener for the main submit button ---
-    submitBtn.addEventListener('click', function (e) {
+    submit.addEventListener('click', function (e) {
         e.preventDefault();
 
-        invoiceData = {
-            date: document.getElementById('date_input').value,
-            invoice: document.getElementById('invoice').value,
-            gstinput: document.getElementById('gstinput').value,
-            biller_name: document.getElementById('biller_name_input').value,
-            biller_number: document.getElementById('biller_number_input').value,
-            biller_aadhar: document.getElementById('biller_aadhar_input').value,
-            gst_name: document.getElementById('gst_name_input').value,
-            city: document.getElementById('city').value,
-            ps: document.getElementById('P.S').value,
-            po: document.getElementById('P.O').value,
-            dist: document.getElementById('dist').value,
-            pincode: document.getElementById('pincode').value,
-            car_details: document.getElementById('car_details_input').value,
-            other_details: document.getElementById('car_details_input2').value,
-            quantity: document.getElementById('quantity_input').value,
-            color: document.getElementById('color_input').value,
-            chassis: document.getElementById('ch_input').value,
-        };
-
-        populateInvoice(invoiceData);
-
+        // Hide the form and show the invoice preview
         form_main.classList.remove("hidden");
-        form_container.classList.add("hidden");
-        editBtnContainer.classList.remove('hidden');
-    });
+        sample_form.classList.add("hidden");
 
-    // --- Event listener for the Print Button ---
-    printBtn.addEventListener('click', function () {
-        if (!invoiceData.invoice) {
-            alert("Please generate an invoice first.");
-            return;
-        }
-        printInvoice(invoiceData.invoice);
-        
-        fetch(scriptURL, {
-            method: 'POST',
-            body: new FormData(form)
-        })
-        .then(response => {
-            console.log("Form submitted successfully");
-            alert("Bill details are successfully sent to server....");
-        })
-        .catch(error => {
-            console.error('Error!', error.message);
+        var x = document.getElementById('date_input').value.split('-');
+        const date_output = document.getElementById('date_output');
+        date_output.textContent = x[2] + '/' + x[1] + '/' + x[0];
+
+        const val = document.getElementById('gstinput');
+        const half_gst = document.querySelectorAll(".gst");
+        const mainval = parseFloat(val.value);
+        const without_gst = (parseFloat((mainval / 1.05).toFixed(2)));
+        const gst = parseFloat((mainval - without_gst).toFixed(2)) / 2;
+        const full_value = parseFloat(2 * gst + without_gst).toFixed(2);
+        const tgst = document.getElementById('tgst');
+        tgst.textContent = `${2 * gst}`;
+        const basic_value = document.querySelectorAll('.basic_value');
+        basic_value.forEach(function (e) {
+            e.textContent = `${without_gst}`;
+        });
+        half_gst.forEach(function (element) {
+            element.textContent = `${gst}`;
+        });
+
+        const main_with_gst_value = document.getElementById('main_with_gst_value');
+        main_with_gst_value.textContent = `${full_value}`;
+
+        const rounded = document.getElementById('rounded');
+        const rounded_value = (mainval - full_value).toFixed(2);
+        rounded.textContent = `${rounded_value}`;
+
+        const car_details_input = document.getElementById('car_details_input').value;
+        const car_details = document.getElementById('car_details');
+        car_details.innerText = car_details_input.toUpperCase();
+
+        const otherDetails = document.getElementById("car_details_input2").value;
+        document.getElementById("other_output").innerText = otherDetails.toUpperCase();
+
+        const color_input = document.getElementById('color_input').value;
+        const color = document.getElementById('color');
+        color.textContent = `${color_input.toUpperCase()} COLOUR`;
+        const ch_input = document.getElementById('ch_input').value;
+        const ch_output = document.getElementById('ch_output');
+        ch_output.textContent = `${ch_input.toUpperCase()}`;
+        const quantity_input = document.getElementById('quantity_input').value;
+        const quantity_output = document.getElementById('quantity_output')
+        quantity_output.textContent = `${quantity_input} NOS`;
+
+        const word = ConvertNumberToWords(mainval);
+        const amount_word = document.getElementById('amount_word');
+        amount_word.textContent = `${word.toUpperCase()} ONLY.`;
+
+        const basicword = document.getElementById('basicword');
+        let gh = without_gst;
+        let beforePoint = Math.floor(gh);
+        let afterPoint = Math.round((gh - beforePoint) * 100);
+        const a = ConvertNumberToWords(beforePoint);
+        const b = ConvertNumberToWords(afterPoint);
+        const basword = `${a}` + ' AND ' + `${b}`;
+        basicword.textContent = `${basword.toUpperCase()} PAISA ONLY`;
+
+        const biller_name_input = document.getElementById('biller_name_input');
+        const biller_name_value = biller_name_input.value;
+        const spanBillerName = document.getElementById('biller_name');
+        spanBillerName.textContent = `${biller_name_value.toUpperCase()}`;
+
+        const city_name_input_val = document.getElementById('city').value;
+        const PS_input_val = document.getElementById('P.S').value;
+        const PO_input_val = document.getElementById('P.O').value;
+        const dist_input_val = document.getElementById('dist').value;
+        const pincode_input_val = document.getElementById('pincode').value;
+        const invoice_input_val = document.getElementById('invoice').value;
+
+        const city_output = document.getElementById('city_output');
+        city_output.textContent = `${city_name_input_val.toUpperCase()} , ${PS_input_val.toUpperCase()} ,${PO_input_val.toUpperCase()}`;
+        const dist_output = document.getElementById('dist_output');
+        dist_output.textContent = `${dist_input_val.toUpperCase()} , WEST BENGAL`;
+        const pincode_output = document.getElementById('pincode_output');
+        pincode_output.textContent = `${pincode_input_val}`;
+        const invoice_bill = document.getElementById('invoice_bill');
+        invoice_bill.textContent = `${invoice_input_val}`;
+        const gst_name_input = document.getElementById('gst_name_input').value;
+        const gst_output = document.getElementById('gstname');
+        gst_output.textContent = `${gst_name_input.toUpperCase()}`;
+
+        const biller_number_input_val = document.getElementById('biller_number_input').value;
+        const biller_aadhar_input_val = document.getElementById('biller_aadhar_input').value;
+
+        const aadhar_output = document.getElementById('aadhar_output');
+        aadhar_output.textContent = `${biller_aadhar_input_val}`;
+
+        const number_output = document.getElementById('number_output');
+        number_output.textContent = `${biller_number_input_val}`;
+        document.getElementById('hidden_date').value = x[2] + '/' + x[1] + '/' + x[0];
+
+        const print = document.getElementById('printBtn');
+        print.addEventListener('click', function () {
+            printInvoice(invoice_input_val);
+            fetch(scriptURL, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => {
+                console.log("Form submitted successfully");
+                alert("Bill details are successfully sent to server....");
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+            });
+
+            // START: New code to show the Edit button after a delay
+            setTimeout(() => {
+                editBtnContainer.style.display = 'inline-block'; // Or 'flex' if you prefer
+            }, 7000); // 7000 milliseconds = 7 seconds
+            // END: New code
         });
     });
 
-    // --- Event listener for the Edit Button ---
+    // START: New event listener for the Edit button
     editBtn.addEventListener('click', function() {
+        // Hide the invoice preview
         form_main.classList.add('hidden');
-        editBtnContainer.classList.add('hidden');
-        form_container.classList.remove('hidden');
+        
+        // Show the form again
+        sample_form.classList.remove('hidden');
 
-        document.getElementById('date_input').value = invoiceData.date;
-        document.getElementById('invoice').value = invoiceData.invoice;
-        document.getElementById('gstinput').value = invoiceData.gstinput;
-        document.getElementById('biller_name_input').value = invoiceData.biller_name;
-        document.getElementById('biller_number_input').value = invoiceData.biller_number;
-        document.getElementById('biller_aadhar_input').value = invoiceData.biller_aadhar;
-        document.getElementById('gst_name_input').value = invoiceData.gst_name;
-        document.getElementById('city').value = invoiceData.city;
-        document.getElementById('P.S').value = invoiceData.ps;
-        document.getElementById('P.O').value = invoiceData.po;
-        document.getElementById('dist').value = invoiceData.dist;
-        document.getElementById('pincode').value = invoiceData.pincode;
-        document.getElementById('car_details_input').value = invoiceData.car_details;
-        document.getElementById('car_details_input2').value = invoiceData.other_details;
-        document.getElementById('quantity_input').value = invoiceData.quantity;
-        document.getElementById('color_input').value = invoiceData.color;
-        document.getElementById('ch_input').value = invoiceData.chassis;
+        // Hide the Edit button itself until the next print
+        editBtnContainer.style.display = 'none';
     });
-
-    // --- Event listener for the Test Data Button ---
-    testDataBtn.addEventListener('click', () => {
-        document.getElementById('date_input').value = '2025-08-15';
-        document.getElementById('invoice').value = '252601';
-        document.getElementById('gstinput').value = '165500';
-        document.getElementById('biller_name_input').value = 'Surojit Das';
-        document.getElementById('biller_number_input').value = '9876512345';
-        document.getElementById('biller_aadhar_input').value = '123456789012';
-        document.getElementById('gst_name_input').value = '';
-        document.getElementById('city').value = 'Kakdwip';
-        document.getElementById('P.S').value = 'Kakdwip';
-        document.getElementById('P.O').value = 'Kakdwip';
-        document.getElementById('dist').value = 'South 24 Parganas';
-        document.getElementById('pincode').value = '743347';
-        document.getElementById('car_details_input').value = 'MAXIMA E-RICKSHAW';
-        document.getElementById('car_details_input2').value = `Exide 130 Amp Battery 13 Months
-1. Motor No: MTR-12345
-2. Controller No: CTL-67890
-3. Chassis No is also mentioned below
-4. 4-Seater with roof
-Axiom 18amp Charger
-Warranty: 1 Year on Motor`;
-        document.getElementById('quantity_input').value = '1';
-        document.getElementById('color_input').value = 'Blue';
-        document.getElementById('ch_input').value = 'AB12CD34EF56GH78';
-    });
+    // END: New event listener
 });
