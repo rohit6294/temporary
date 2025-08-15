@@ -4,138 +4,128 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice Generator</title>
+    <title></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="./style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-        xintegrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
+        integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-        xintegrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
-    <div class="form-container" id="form_container">
-        <h2>Create New Invoice</h2>
-        <form id="sample_form" method="POST" name="google-sheet">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="date_input">Date</label>
-                    <input type="date" id="date_input" name="date">
-                </div>
-                <div class="form-group">
-                    <label for="invoice">Invoice Number</label>
-                    <input type="number" placeholder="e.g., 1024" id="invoice" name="Invoice_no">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="gstinput">Total Amount (with GST)</label>
-                    <input type="number" name="gstinput" id="gstinput" placeholder="e.g., 150000" name="Total_price">
-                </div>
-            </div>
-            <hr class="form-divider">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="biller_name_input">Customer Name</label>
-                    <input type="text" id="biller_name_input" placeholder="Enter full name" name="Customer_name">
-                </div>
-                 <div class="form-group">
-                    <label for="biller_number_input">Customer Number</label>
-                    <input type="number" id="biller_number_input" placeholder="Enter 10-digit number" name="biller_number">
-                </div>
-            </div>
-             <div class="form-row">
-                <div class="form-group">
-                    <label for="biller_aadhar_input">Customer Aadhar</label>
-                    <input type="number" id="biller_aadhar_input" placeholder="Enter Aadhar number" name="biller_aadhar">
-                </div>
-                <div class="form-group">
-                    <label for="gst_name_input">Customer GSTIN (Optional)</label>
-                    <input type="text" id="gst_name_input" placeholder="Enter GSTIN" name="GST_No">
-                </div>
-            </div>
-            <div class="form-row">
-                 <div class="form-group">
-                    <label for="city">Village / City</label>
-                    <input type="text" id="city" placeholder="Enter village or city" name="City">
-                </div>
-                <div class="form-group">
-                    <label for="P.S">Police Station</label>
-                    <input type="text" id="P.S" placeholder="Enter P.S." name="P.S">
-                </div>
-            </div>
-            <div class="form-row">
-                 <div class="form-group">
-                    <label for="P.O">Post Office</label>
-                    <input type="text" id="P.O" placeholder="Enter P.O." name="P.O">
-                </div>
-                <div class="form-group">
-                    <label for="dist">District</label>
-                    <input type="text" id="dist" placeholder="Enter district" name="Distric">
-                </div>
-            </div>
-             <div class="form-row">
-                <div class="form-group">
-                    <label for="pincode">Pincode</label>
-                    <input type="number" id="pincode" placeholder="Enter 6-digit pincode" name="Pincode">
-                </div>
-            </div>
-             <hr class="form-divider">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="car_details_input">E-Rickshaw Name/Model</label>
-                    <textarea id="car_details_input" placeholder="Enter E-rickshaw name" name="E-rickshaw_name"></textarea>
-                </div>
-            </div>
-             <div class="form-row">
-                <div class="form-group">
-                    <label for="car_details_input2">Other Details</label>
-                    <textarea id="car_details_input2" placeholder="e.g., Motor No., Controller No." name="Other_details"></textarea>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="ch_input">Chassis No.</label>
-                    <input type="text" id="ch_input" placeholder="Enter E-rickshaw chassis no." name="Chassis_no">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="quantity_input">Quantity</label>
-                    <input type="number" id="quantity_input" placeholder="e.g., 1" name="Quantity">
-                </div>
-                <div class="form-group">
-                    <label for="color_input">Color</label>
-                    <input type="text" id="color_input" placeholder="Enter color" name="Color">
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" id="testDataBtn" class="action-btn test-btn">Load Test Data</button>
-                <button id="but" type="submit" name="submit" class="action-btn submit-btn">Generate Invoice</button>
-            </div>
-        </form>
-    </div>
+    <!-- <div class="container" id="bb">
+        <div class="sub">
+            <h1>Login</h1>
+            <form class="form" id="loginForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" id="passid">Login</button>
+            </form>
+        </div>
+    </div> -->
 
-    <section class="hidden" id="form_main">
+
+    <form class="mb-5 " id="sample_form" method="POST" name="google-sheet" style="margin-left: 20px;">
+
+        <input type="date" id="date_input" name="date" name="Date">
+        <br>
+        <input type="hidden" name="Date" id="hidden_date">
+
+        <input type="number" placeholder="Enter the invoice number" id="invoice"
+            class="border  border-gray-400 rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500"
+            name="Invoice_no">
+        <br>
+        <input type="number"  id="gstinput" placeholder="Enter the main value"
+            class="border  border-gray-400 rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500"
+            name="Total_price">
+        <br>
+        <input type="text" id="biller_name_input" placeholder="Enter the biller name"
+            class="border  border-gray-400 rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500"
+            name="Customer_name">
+        <br>
+        <input type="number" id="biller_number_input"  placeholder="Enter the biller number"
+            class="border  border-gray-400 rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500" name="biller_number">
+        <br>
+        <input type="number" id="biller_aadhar_input"  placeholder="Enter the biller aadhar"
+            class="border  border-gray-400 rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500" name="biller_aadhar">
+        <br>
+
+        <input type="text" id="gst_name_input" placeholder="Enter GSTIN"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500"
+            name="GST_No">
+        <br>
+        <input type="text" id="city" placeholder="Enter the city"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500" name="City">
+        <br>
+        <input type="text" id="P.S" placeholder="Enter the P.S"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500" name="P.S">
+        <br>
+
+        <input type="text" id="P.O" placeholder="Enter the P.O"
+            class="border border-gray-400 rounded  py-2 px-4 mb-2 focus:outline-none focus:border-blue-500" name="P.O">
+        <br>
+        <input type="text" id="dist" placeholder="Enter the district"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus:border-blue-500"
+            name="Distric">
+        <br>
+        <input type="number" id="pincode" placeholder="Enter the pincode"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus-border-blue-500"
+            name="Pincode">
+        <br>
+        <textarea type="text" id="car_details_input" placeholder="Enter E-rickshaw name"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus-border-blue-500"
+            name="E-rickshaw_name"></textarea>
+        <br>
+        <textarea id="car_details_input2" name="Other_details" rows="9" style="width: 100%; resize: none;" placeholder="Enter additional details..."></textarea>
+
+        <br>
+        <input type="number" id="quantity_input" placeholder="Enter quantity"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus-border-blue-500"
+            name="Quantity">
+        <br>
+        <input type="text" id="color_input" placeholder="Enter E-rickshaw color"
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus-border-blue-500"
+            name="Color">
+        <br>
+        <input type="text" id="ch_input" style="width: 250px;" placeholder="Enter E-rickshaw chassis no."
+            class="border border-gray-400  rounded py-2 px-4 mb-2 focus:outline-none focus-border-blue-500"
+            name="Chassis_no">
+        <br>
+
+        <button id="but" type="submit" style="width: 90px;"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            name="submit">Submit</button>
+            
+
+    </form>
+    <section class="" id="form_main">
+
         <nav>
-            <div class='toolbar'>
-                <span class='btngroup'><button id='printBtn' class='btn' title="Print Invoice"></button>Print</span>
-                <span class='btngroup hidden' id="editBtnContainer">
-                    <button id='editBtn' class='btn' title="Edit Invoice"></button>Edit
-                </span>
-            </div>
-        </nav>
-        <main id="main_formm">
+    <div class='toolbar'>
+        <span class='btngroup'>
+            <button id='printBtn' class='btn' title="Print Invoice"></button>Print
+        </span>
+        
+        <span class='btngroup' id="editBtnContainer" style="display: none;">
+            <button id='editBtn' class='btn' title="Edit Invoice">Edit</button>
+        </span>
+        </div>
+</nav>
+        <main id="main_formm" >
+
             <h1 id="title" class="text-xl">Invoice</h1>
+
             <div class="prehead">
-                <div class="info">Date: <span id="date_output"></span></div>
+                <div class="info">Date: <span id="date_output"></span>
+                </div>
                 <div class="info">Invoice No. MS#<span id="invoice_bill">NaN</span></div>
             </div>
             <header style="padding-top: 10px; padding-bottom: 10px; width: 100%;">
@@ -144,9 +134,12 @@
                     <br>
                     <div>
                         <label id="owner-name"> &emsp;&emsp;M S ENTERPRISE</label><br>
-                        <span id="owner-address">&emsp;&emsp;12/5 CHOWBAGA ROAD,KOLKATA-700039<br>&emsp;&emsp;BRANCH-
-                            MATHURAPURPUR SOUTH24 PGNS-
-                            &emsp;&emsp; 743354</span><br>
+                        <span id="owner-address">&emsp;&emsp;12/5 CHOWBAGA ROAD,KOLKATA-700039<br>&emsp;&emsp;BRANCH 1-
+                            MATHURAPURPUR ,<br>&emsp;&emsp;SOUTH 24 PGNS-
+                             743354</span><br>
+                        <span id="owner-address">&emsp;&emsp;BRANCH 2-
+                            AKRA PHATAK AUTO STAND &emsp;&emsp; &emsp;&emsp;SANTOSHPUR ROAD-
+                           700066</span><br>
                         <span id="owner-city">&emsp;&emsp;GSTIN/UIN : 19AREPB1784D1Z1</span><br>
                         <span>&emsp;&emsp;STATE NAME : WEST BBENGAL</span> <br>
                         <span>&emsp;&emsp;Sate Code : 19</span>
@@ -167,6 +160,7 @@
                     </div>
                 </div>
             </header>
+
             <table class="lineitems">
                 <thead>
                     <tr>
@@ -186,13 +180,23 @@
                                 <br>
                                 <span>CHASSIS NO:- <span id="ch_output"></span></span>
                                 <br>
+                                <!-- <span>&emsp;&emsp;&emsp;&emsp;<span id="other_output"></span></span> -->
                                 <div id="other_output"></div>
+
                             </b>
                         </td>
-                        <td class="sl">870380</td>
-                        <td class="sl"><b><span id="quantity_output">NaN</span></b></td>
-                        <td class="sl "><span class="basic_value">NaN</span></td>
-                        <td class="sl"><b> <span class="basic_value">NaN</span></b></td>
+                        <td class="sl">
+                            870380
+                        </td>
+                        <td class="sl">
+                            <b><span id="quantity_output">NaN</span></b>
+                        </td>
+                        <td class="sl ">
+                            <span class="basic_value">NaN</span>
+                        </td>
+                        <td class="sl">
+                            <b> <span class="basic_value">NaN</span></b>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="7">
@@ -220,10 +224,17 @@
                             </table>
                         </td>
                     </tr>
+                    </td>
+                    </tr>
                 </tbody>
             </table>
+
             <div style="width: 95%;">
-                <span>Amount Chargable(in words) :<br><b><span id="amount_word">NaN</span></b></span>
+
+                <span>Amount Chargable(in words) :
+                    <br>
+                    <b><span id="amount_word">NaN</span></b>
+                </span>
             </div>
             <table class="invoice-table lineitems">
                 <thead class="invoice-table-header">
@@ -235,6 +246,7 @@
                         <th>Total</th>
                     </tr>
                     <tr>
+
                         <th>Value</th>
                         <th>Rate</th>
                         <th>Amount</th>
@@ -254,33 +266,62 @@
                         <td id="tgst">20,190.48</td>
                     </tr>
                 </tbody>
+
             </table>
             <div style="width: 95%;">
-                <span>Tax Amount (in words) :<br><b><span id="basicword"> NaN </span></b></span>
+
+                <span>Tax Amount (in words) :
+                    <br>
+                    <b><span id="basicword"> NaN </span></b>
+                </span>
             </div>
-            <!-- START: UPDATED FOOTER STRUCTURE -->
-            <div class="footer-container">
-                <div class="footer-column left">
-                    <div class="signature-box">
-                        <span><b>Customer Signature</b></span>
-                        <span class="signatory">Signature</span>
+
+            <div style="width: 95%; margin-top: 5px; ">
+                <!-- <div style="float: left; width: 45%;">
+                    <span><u> <b>Declaration</b> </u>
+                        <br>
+                        We declare that this invoice shows the actual price of the <br> goods describe and that all
+                        particulars are true and correct.
+                    </span>
+                </div> -->
+
+                <div style="width: 45%; float: left;">
+                    <div style=" padding: 2px;  border: 1px solid black; text-align: left;">
+
+                        <span style="font-size: 17px;"><b> Customer Signature </b></span>
+                        <br><br>
+                        <span style="padding-right: 15px; font-size: small;">Signature</span>
                     </div>
-                    <div class="declaration">
-                        <span><b>Declaration</b></span>
-                        <span>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</span>
+                    <div>
+                        <span ><b>Declaration</b>
+                            <br>
+                            <span style="font-size: 10px; display: block; line-height: 10px;">
+
+                                We declare that this invoice shows the actual price of the goods describe and that all
+                                particulars are true and correct.
+                            </span>
+                        </span>
+
                     </div>
                 </div>
-                <div class="footer-column right">
-                    <div class="signature-box">
-                        <span><b>For M S ENTERPRISE</b></span>
-                        <span class="signatory">Authorized Signatory</span>
-                    </div>
+                <div style="width: 45%; float: right; padding: 2px;  border: 1px solid black; text-align: right;">
+                    <span style="font-size: 17px;"><b> For M S ENTERPRISE </b></span>
+                    <br><br><br><br>
+                    <span style="padding-right: 15px; font-size: small;">Authorized Signatory</span>
                 </div>
+
             </div>
-            <!-- END: UPDATED FOOTER STRUCTURE -->
+
+
         </main>
+
     </section>
+
+
+
 </body>
 <script src="./index.js"></script>
 <script src="./login.js"></script>
+
+
 </html>
