@@ -21,7 +21,6 @@
 </head>
 
 <body>
-    <!-- START: ADDED FORM CONTAINER AND STRUCTURE -->
     <div class="form-container" id="form_container">
         <h2>Create New Invoice</h2>
         <form id="sample_form" method="POST" name="google-sheet">
@@ -117,10 +116,12 @@
                     <input type="text" id="color_input" placeholder="Enter color" name="Color">
                 </div>
             </div>
-            <button id="but" type="submit" name="submit">Generate Invoice</button>
+            <div class="form-actions">
+                <button type="button" id="testDataBtn" class="action-btn test-btn">Load Test Data</button>
+                <button id="but" type="submit" name="submit" class="action-btn submit-btn">Generate Invoice</button>
+            </div>
         </form>
     </div>
-    <!-- END: ADDED FORM CONTAINER AND STRUCTURE -->
 
     <section class="hidden" id="form_main">
         <nav>
@@ -257,28 +258,26 @@
             <div style="width: 95%;">
                 <span>Tax Amount (in words) :<br><b><span id="basicword"> NaN </span></b></span>
             </div>
-            <div style="width: 95%; margin-top: 5px; ">
-                <div style="width: 45%; float: left;">
-                    <div style=" padding: 2px;  border: 1px solid black; text-align: left;">
-                        <span style="font-size: 17px;"><b> Customer Signature </b></span>
-                        <br><br>
-                        <span style="padding-right: 15px; font-size: small;">Signature</span>
+            <!-- START: UPDATED FOOTER STRUCTURE -->
+            <div class="footer-container">
+                <div class="footer-column left">
+                    <div class="signature-box">
+                        <span><b>Customer Signature</b></span>
+                        <span class="signatory">Signature</span>
                     </div>
-                    <div>
-                        <span><b>Declaration</b><br>
-                            <span style="font-size: 10px; display: block; line-height: 10px;">
-                                We declare that this invoice shows the actual price of the goods describe and that all
-                                particulars are true and correct.
-                            </span>
-                        </span>
+                    <div class="declaration">
+                        <span><b>Declaration</b></span>
+                        <span>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</span>
                     </div>
                 </div>
-                <div style="width: 45%; float: right; padding: 2px;  border: 1px solid black; text-align: right;">
-                    <span style="font-size: 17px;"><b> For M S ENTERPRISE </b></span>
-                    <br><br><br><br>
-                    <span style="padding-right: 15px; font-size: small;">Authorized Signatory</span>
+                <div class="footer-column right">
+                    <div class="signature-box">
+                        <span><b>For M S ENTERPRISE</b></span>
+                        <span class="signatory">Authorized Signatory</span>
+                    </div>
                 </div>
             </div>
+            <!-- END: UPDATED FOOTER STRUCTURE -->
         </main>
     </section>
 </body>
