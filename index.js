@@ -78,10 +78,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const printBtn = document.getElementById('printBtn');
     const editBtn = document.getElementById('editBtn');
     const editBtnContainer = document.getElementById('editBtnContainer');
+    const testDataBtn = document.getElementById('testDataBtn'); // Get the new test button
     
     // --- Get form and invoice sections ---
     const sample_form = document.getElementById('sample_form');
     const form_main = document.getElementById('form_main');
+    const form_container = document.getElementById('form_container');
 
     // --- Variable to store the current invoice data ---
     let invoiceData = {};
@@ -160,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // --- Show the invoice section and hide the form ---
         form_main.classList.remove("hidden");
-        sample_form.classList.add("hidden");
+        form_container.classList.add("hidden");
 
         // --- Show the edit button ---
         editBtnContainer.classList.remove('hidden');
@@ -181,8 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => {
             console.log("Form submitted successfully");
-            // Using a more modern notification approach than alert() is recommended,
-            // but for simplicity, we'll keep it as is.
             alert("Bill details are successfully sent to server....");
         })
         .catch(error => {
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editBtnContainer.classList.add('hidden');
         
         // --- Show the form again ---
-        sample_form.classList.remove('hidden');
+        form_container.classList.remove('hidden');
 
         // --- Repopulate the form with the stored data ---
         document.getElementById('date_input').value = invoiceData.date;
@@ -218,4 +218,32 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('color_input').value = invoiceData.color;
         document.getElementById('ch_input').value = invoiceData.chassis;
     });
+
+    // --- START: Event listener for the Test Data Button ---
+    testDataBtn.addEventListener('click', () => {
+        document.getElementById('date_input').value = '2025-08-15';
+        document.getElementById('invoice').value = '252601';
+        document.getElementById('gstinput').value = '165500';
+        document.getElementById('biller_name_input').value = 'Surojit Das';
+        document.getElementById('biller_number_input').value = '9876512345';
+        document.getElementById('biller_aadhar_input').value = '123456789012';
+        document.getElementById('gst_name_input').value = ''; // Optional, so left blank
+        document.getElementById('city').value = 'Kakdwip';
+        document.getElementById('P.S').value = 'Kakdwip';
+        document.getElementById('P.O').value = 'Kakdwip';
+        document.getElementById('dist').value = 'South 24 Parganas';
+        document.getElementById('pincode').value = '743347';
+        document.getElementById('car_details_input').value = 'MAXIMA E-RICKSHAW';
+        document.getElementById('car_details_input2').value = `Exide 130 Amp Battery 13 Months
+1. Motor No: MTR-12345
+2. Controller No: CTL-67890
+3. Chassis No is also mentioned below
+4. 4-Seater with roof
+Axiom 18amp Charger
+Warranty: 1 Year on Motor`;
+        document.getElementById('quantity_input').value = '1';
+        document.getElementById('color_input').value = 'Blue';
+        document.getElementById('ch_input').value = 'AB12CD34EF56GH78';
+    });
+    // --- END: Event listener for the Test Data Button ---
 });
